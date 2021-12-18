@@ -1,119 +1,95 @@
 'use strict';
 
 /* Задание на урок:
+1) У нас уже есть рабочее приложение, состоящее из отдельных функций. Представьте, что
+перед вами стоит задача переписать его так, чтобы все функции стали методами объекта personalMovieDB
+Такое случается в реальных продуктах при смене технологий или подхода к архитектуре программы.
 
-3) При помощи условий проверить  personalMovieDB.count, и если он меньше 10 - вывести сообщение
-"Просмотрено довольно мало фильмов", если от 10 до 30 - "Вы классический зритель", а если больше - 
-"Вы киноман". А если не подошло ни к одному варианту - "Произошла ошибка"
+2) Создать метод toggleVisibleMyDB, который при вызове будет проверять свойство privat. Если оно false - он
+переключает его в true, если true - переключает в false. Протестировать вместе с showMyDB.
 
-4) Потренироваться и переписать цикл еще двумя способами*/
+3) В методе writeYourGenres запретить пользователю нажать кнопку "отмена" или оставлять пустую строку. 
+Если он это сделал - возвращать его к этому же вопросу. После того, как все жанры введены - 
+при помощи метода forEach вывести в консоль сообщения в таком виде:
+"Любимый жанр #(номер по порядку, начиная с 1) - это (название из массива)"*/
 
-
-// Код возьмите из предыдущего домашнего задания
-
-
-// let arr = {
-//     movies: {},
-//     name: '',
-// };
-
-// const a = prompt('Ваше имя', '');
-
-// arr.name = a;
-
-
-
-// console.log(arr);
-
-
-
-// function createCounter() {
-//     let counter = 0;
-//     const myFunction = function() {
-//         counter = counter + 1;
-//         return counter;
-//     };
-//     return myFunction;
-// }
-// const increment = createCounter();
-// const c1 = increment();
-// console.log(increment);
-
-
-// let test = '12.8 23 pxsdfsdfsdf 23';
-// console.log(parseFloat(test));
-
-
-/* Задание на урок:
-
-1) Первую часть задания повторить по уроку
-
-2) Создать функцию showMyDB, которая будет проверять свойство privat. Если стоит в позиции
-false - выводит в консоль главный объект программы
-
-3) Создать функцию writeYourGenres в которой пользователь будет 3 раза отвечать на вопрос 
-"Ваш любимый жанр под номером ${номер по порядку}". Каждый ответ записывается в массив данных
-genres
-
-P.S. Функции вызывать не обязательно*/
-
-
-// Код возьмите из предыдущего домашнего задания
-
-let numberOfFilms;
-
-
-function start() {
-    numberOfFilms = +prompt('Сколько фильмов вы уже посмотрели?', '');
-
-    while (numberOfFilms == '' || numberOfFilms == null || isNaN(numberOfFilms)) {
-        numberOfFilms = +prompt('Сколько фильмов вы уже посмотрели?', '');
-    }
-}
-// start();
 
 const personalMovieDB = {
-    count: numberOfFilms,
+    count: 0,
     movies: {},
     actors: {},
     genres: [],
-    privat: false
-}
+    privat: false,
+    start: function() {
+        personalMovieDB.count = +prompt('Сколько фильмов вы уже посмотрели?', '');
 
-function rememberMyFilms() {
-    for (let i = 0; i < 2; i++) {
-        const b = prompt('Какой фильм последний смотрели?', '');
-        const d = prompt('сколько фильмов посмотрели', '');
+        while (personalMovieDB.count == '' || personalMovieDB.count == null || isNaN(personalMovieDB.count)) {
+            personalMovieDB.count = +prompt('Сколько фильмов вы уже посмотрели?', '');
+        }
+    },
+    rememberMyFilms: function() {
+        for (let i = 0; i < 2; i++) {
+            const a = prompt('Один из последних просмотренных фильмов?', ''),
+                b = prompt('На сколько оцените его?', '');
 
-        if (b != '' && d != '' && b != null && d != null && b.length < 50) {
-            personalMovieDB.movies[b] = d;
-            personalMovieDB.count = d;
+            if (a != null && b != null && a != '' && b != '' && a.length < 50) {
+                personalMovieDB.movies[a] = b;
+                console.log('done');
+            } else {
+                console.log('error');
+                i--;
+            }
+        }
+    },
+    detectPersonalLevel: function() {
+        if (personalMovieDB.count < 10) {
+            console.log("Просмотрено довольно мало фильмов");
+        } else if (personalMovieDB.count >= 10 && personalMovieDB.count < 30) {
+            console.log("Вы классический зритель");
+        } else if (personalMovieDB.count >= 30) {
+            console.log("Вы киноман");
         } else {
-            console.log('Ты делаешь что-то не так...');
-            i--;
+            console.log("Произошла ошибка");
+        }
+    },
+    showMyDB: function(hidden) {
+        if (!hidden) {
+            console.log(personalMovieDB);
+        }
+    },
+    toggleVisibleMyDB: function() {
+        if (personalMovieDB.privat) {
+            personalMovieDB.privat = false;
+        } else {
+            personalMovieDB.privat = true;
+        }
+    },
+    writeYourGenres: function() {
+        for (let i = 1; i < 2; i++) {
+            let genre = prompt(`Ваш любимый жанр под номером ${i}`);
+
+            if (genre === '' || genre == null) {
+                console.log('Вы ввели некорректные данные или не ввели их вовсе');
+                i--;
+            } else {
+                personalMovieDB.genres[i - 1] = genre;
+            }
+
+            // Альтернативный вариант из урока
+
+            // let genres = prompt(`Введите ваши любимые жанры через запятую`).toLowerCase();
+
+            // if (genres === '' || genres == null) {
+            //     console.log('Вы ввели некорректные данные или не ввели их вовсе');
+            //     i--;
+            // } else {
+            //     personalMovieDB.genres = genres.split(', ');
+            //     personalMovieDB.genres.sort();
+            // } 
         }
 
+        personalMovieDB.genres.forEach((item, i) => {
+            console.log(`Любимый жанр ${i + 1} - это ${item}`);
+        });
     }
-}
-// rememberMyFilms();
-
-
-
-function showMyDB() {
-    if (personalMovieDB.privat) {
-        console.log(personalMovieDB);
-    } else {
-        console.log('У вас нет прав!');
-    }
-}
-// showMyDB();
-
-function writeYourGenres() {
-    for (let i = 1; i < 4; i++) {
-        personalMovieDB.genres[i - 1] = prompt(`Ваш любимый жанр под номером ${i}`, '');
-    }
-}
-writeYourGenres();
-
-
-console.log(personalMovieDB);
+};

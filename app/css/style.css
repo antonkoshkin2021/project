@@ -1553,24 +1553,3 @@ body {
     background-color: orange;
     color: #fff
 }
-
-.norm {
-    width: 200px;
-    height: 200px;
-    background-color: #000
-}
-
-body {
-    display: -webkit-box!important;
-    display: -ms-flexbox!important;
-    display: flex!important
-}
-
-.block2 {
-    display: -webkit-box!important;
-    display: -ms-flexbox!important;
-    display: flex!important;
-    margin: 50px;
-    width: 400px!important;
-    height: 800px!important
-}
